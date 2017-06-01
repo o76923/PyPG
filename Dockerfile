@@ -42,11 +42,11 @@ RUN apk --no-cache add su-exec \
    && chmod g+s /run/postgresql \
    && chown -R postgres /run/postgresql
 
-COPY . /app/
+COPY postgresql.conf /app/conf/postgresql.conf
 
 RUN su-exec postgres pg_ctl initdb -D /app/pgdata  -o "-E 'UTF-8'" \
     && rm -f /app/pgdata/postgresql.conf \
     && echo "host all all 0.0.0.0/0 md5" >> /app/pgdata/pg_hba.conf \
-    && mv /app/postgresql.conf /app/pgdata/postgresql.conf \
+    && mv /app/conf/postgresql.conf /app/pgdata/postgresql.conf \
     && echo "max_parallel_workers_per_gather=$N_CORES" >> /app/pgdata/postgresql.conf
 
